@@ -2,7 +2,7 @@ import os
 import datetime
 import multiprocessing as mp
 
-
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -48,6 +48,9 @@ def crawl_job(job, sub, num_page, save_path):
             f.write("\t".join(row) + '\n')
 
 def main():
+    display = Display(visible=0, size=(1920, 1080))
+    display.start()
+    
     # configure save directory
     now = datetime.datetime.now()
     save_path = f"./{now.year:0>4}{now.month:0>2}{now.day:0>2}"
@@ -65,7 +68,7 @@ def main():
     for job in [2294, 2295, 2296, 2297, 2298]:
         for sub in SUBS[job]:
             args.append([job, sub, 500, save_path])
-    with mp.Pool(processes=4) as pool:
+    with mp.Pool(processes=os.cpu_count() // 2) as pool:
         res = pool.starmap_async(crawl_job, args)
         res.wait()
     
