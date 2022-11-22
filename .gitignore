@@ -1,2 +1,5 @@
 data/
 20221111/
+.vscode/
+.ipynb_checkpoints/
+__pycache__/
